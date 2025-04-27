@@ -1,7 +1,10 @@
-// Load .env in local development (ignored on Render)
+// index.js
+
+// Load environment variables
 require('dotenv').config();
 
 const express = require('express');
+const cors = require('cors');
 const { Pool } = require('pg');
 
 const authRoutes = require('./routes/authRoutes');
@@ -11,22 +14,29 @@ const userRoutes = require('./routes/userRoutes');
 const app = express();
 const port = process.env.PORT || 10000;
 
+// Enable CORS for local dev and your deployed front-end
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://certiflow-frontend.vercel.app'  // replace with your real front-end URL
+  ]
+}));
+
 // Parse JSON bodies
 app.use(express.json());
 
-// Mount auth routes (register & login)
+// Mount authentication routes (register & login)
 app.use('/api/auth', authRoutes);
 
 // Protect user routes with JWT middleware
 app.use('/api/users', authenticate, userRoutes);
 
-// PostgreSQL connection (for health-check)
+// Health-check route using PostgreSQL
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
 
-// Health-check route
 app.get('/health', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -42,7 +52,8 @@ app.get('/', (req, res) => {
   res.send('CertiFlow API is running');
 });
 
-// Start server
+// Start the server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
