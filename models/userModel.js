@@ -7,6 +7,7 @@ const db = knex(knexfile[environment]);
 const User = {
   getAll: () => db('users').select('*'),
   getById: (id) => db('users').where({ id }).first(),
+  getByEmail: (email) => db('users').where({ email }).first(),  // <— added
   create: (user) => db('users').insert(user).returning('*'),
   update: (id, user) => db('users').where({ id }).update(user).returning('*'),
   delete: (id) => db('users').where({ id }).del(),
