@@ -3,11 +3,10 @@
   "version": "1.0.0",
   "description": "CertiFlow backend API",
   "main": "index.js",
- "scripts": {
-  "start": "node index.js",
-  "test": "echo \"Error: no test specified\" && exit 1"
-},
-
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/CertiFlow/certiflow-backend.git"
@@ -20,6 +19,8 @@
   },
   "homepage": "https://github.com/CertiFlow/certiflow-backend#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "pg": "^8.15.6"
   }
 }
