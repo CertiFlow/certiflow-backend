@@ -12,7 +12,6 @@ app.listen(port, () => {
 const { Client } = require('pg');
 require('dotenv').config();
 
-const app = express();
 const port = process.env.PORT || 10000;
 
 // Connect to database
