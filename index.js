@@ -1,41 +1,29 @@
+require('dotenv').config();      // Loads .env locally; ignored in Render
 const express = require('express');
+const { Pool } = require('pg');
+
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
-app.get('/', (req, res) => {
-  res.send('Hello, CertiFlow!');
+// Only use the single DATABASE_URL variable:
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
-const { Client } = require('pg');
-require('dotenv').config();
-
-
-// Connect to database
-const client = new Client({
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-});
-
-client.connect()
-  .then(() => console.log('Connected to the database!'))
-  .catch(err => console.error('Connection error', err.stack));
-
-// THIS IS THE NEW /health ROUTE
+// Define your /health route (no eager pool.connect on startup):
 app.get('/health', async (req, res) => {
   try {
-    const result = await client.query('SELECT NOW()');
+    const result = await pool.query('SELECT NOW()');
     res.json({ dbTime: result.rows[0].now });
   } catch (err) {
-    res.status(500).send('Database error');
+    console.error('DB error:', err);
+    res.status(500).json({ error: 'Database connection error' });
   }
 });
 
+// Only start listening after defining routes:
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
+
