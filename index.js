@@ -1,17 +1,19 @@
-require('dotenv').config();      // Loads .env locally; ignored in Render
+// Load .env in local development (ignored on Render)
+require('dotenv').config();
+
 const express = require('express');
 const { Pool } = require('pg');
 
 const app = express();
 const port = process.env.PORT || 10000;
 
-// Only use the single DATABASE_URL variable:
+// Use only the single DATABASE_URL env var on Render
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
+  ssl: { rejectUnauthorized: false }
 });
 
-// Define your /health route (no eager pool.connect on startup):
+// Health-check route
 app.get('/health', async (req, res) => {
   try {
     const result = await pool.query('SELECT NOW()');
@@ -22,8 +24,10 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// Only start listening after defining routes:
+// (Optional) root route
+app.get('/', (req, res) => res.send('CertiFlow API is running'));
+
+// Start server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
-
