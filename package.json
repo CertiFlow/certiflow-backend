@@ -1,0 +1,23 @@
+{
+  "name": "certiflow-backend",
+  "version": "1.0.0",
+  "description": "CertiFlow backend API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CertiFlow/certiflow-backend.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CertiFlow/certiflow-backend/issues"
+  },
+  "homepage": "https://github.com/CertiFlow/certiflow-backend#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
