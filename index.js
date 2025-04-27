@@ -2,14 +2,23 @@
 require('dotenv').config();
 
 const express = require('express');
-const userRoutes = require('./routes/userRoutes');
 const { Pool } = require('pg');
+
+const authRoutes = require('./routes/authRoutes');
+const authenticate = require('./middleware/authenticate');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const port = process.env.PORT || 10000;
 
 // Parse JSON bodies
 app.use(express.json());
+
+// Mount auth routes (register & login)
+app.use('/api/auth', authRoutes);
+
+// Protect user routes with JWT middleware
+app.use('/api/users', authenticate, userRoutes);
 
 // PostgreSQL connection (for health-check)
 const pool = new Pool({
@@ -27,9 +36,6 @@ app.get('/health', async (req, res) => {
     res.status(500).json({ error: 'Database connection error' });
   }
 });
-
-// Mount user routes under /api/users
-app.use('/api/users', userRoutes);
 
 // Root route
 app.get('/', (req, res) => {
