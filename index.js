@@ -2,12 +2,16 @@
 require('dotenv').config();
 
 const express = require('express');
+const userRoutes = require('./routes/userRoutes');
 const { Pool } = require('pg');
 
 const app = express();
 const port = process.env.PORT || 10000;
 
-// Use only the single DATABASE_URL env var on Render
+// Parse JSON bodies
+app.use(express.json());
+
+// PostgreSQL connection (for health-check)
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -24,8 +28,13 @@ app.get('/health', async (req, res) => {
   }
 });
 
-// (Optional) root route
-app.get('/', (req, res) => res.send('CertiFlow API is running'));
+// Mount user routes under /api/users
+app.use('/api/users', userRoutes);
+
+// Root route
+app.get('/', (req, res) => {
+  res.send('CertiFlow API is running');
+});
 
 // Start server
 app.listen(port, () => {
