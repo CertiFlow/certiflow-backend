@@ -72,6 +72,8 @@ try { app.use('/api/documents', require('./routes/documents')); } catch (e) { co
 try { app.use('/api/templates', require('./routes/templates')); } catch (e) { console.warn('ℹ️ templates route:', e.message); }
 try { app.use('/api/certificates', require('./routes/certificates')); } catch (e) { console.warn('ℹ️ certificates route:', e.message); }
 try { app.use('/api/verify', require('./routes/verify')); } catch (e) { console.warn('ℹ️ verify route:', e.message); }
+try { app.use('/api/auth', require('./routes/auth')); } catch (e) { console.warn('ℹ️ auth route:', e.message); }
+
 
 // Auto-run Knex migrations at startup
 async function runMigrations() {
